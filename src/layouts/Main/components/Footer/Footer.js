@@ -24,10 +24,10 @@ const Footer = props => {
         &copy;{' '}
         <Link
           component="a"
-          href="https://devias.io/"
+          href="https://github.com/egg734631"
           target="_blank"
         >
-          Devias IO
+          Kayac
         </Link>
         . 2019
       </Typography>
