@@ -28,9 +28,6 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     padding: theme.spacing(2)
   },
-  divider: {
-    margin: theme.spacing(2, 0)
-  },
   nav: {
     marginBottom: theme.spacing(2)
   }
@@ -44,7 +41,7 @@ const Sidebar = props => {
   const pages = [
     {
       title: '首頁',
-      href: '/',
+      href: '/home',
       icon: <DashboardIcon />
     },
     {
