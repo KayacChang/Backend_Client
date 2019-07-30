@@ -8,14 +8,17 @@ import {
   Card,
   CardActions,
   CardContent,
+
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   TablePagination,
-  Button,
+
+  Button
 } from '@material-ui/core';
+import { Detail } from './Detail';
 
 
 const useStyles = makeStyles(theme => ({
@@ -40,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 
 function HistoryHead() {
   const titles = [
-    '單號', '時間', '用戶ID', '下注', '總得分', '詳情'
+    '單號', '時間', '用戶ID', '下注', '總得分', '特色遊戲', '詳情'
   ];
 
   return (
@@ -54,6 +57,19 @@ function HistoryHead() {
 }
 
 function HistoryBody({ data, rows }) {
+  const [open, setOpen] = useState(false);
+
+  const [record, setSelectedRecord] = useState(undefined);
+
+  function onDetailOpen(record) {
+    setOpen(true);
+    setSelectedRecord(record);
+  }
+
+  function onDetailClose() {
+    setOpen(false);
+    setSelectedRecord(undefined);
+  }
 
   return (
     <TableBody>
@@ -72,12 +88,21 @@ function HistoryBody({ data, rows }) {
 
           <TableCell>{record.totalScores}</TableCell>
 
+          <TableCell>{record.featureGame.length}</TableCell>
+
           <TableCell>
-            <Button variant="contained" color="primary">詳情</Button>
+            <Button
+              variant="contained" color="primary" onClick={() => onDetailOpen(record)}>
+              詳情
+            </Button>
           </TableCell>
 
         </TableRow>
       ))}
+
+      {
+        (record) && <Detail open={open} onClose={onDetailClose} record={record}/>
+      }
     </TableBody>
   );
 }
@@ -109,7 +134,7 @@ export const HistoryTable = props => {
           <div className={classes.inner}>
             <Table>
               <HistoryHead/>
-              <HistoryBody data={users} rows={rowsPerPage} />
+              <HistoryBody data={users} rows={rowsPerPage}/>
             </Table>
           </div>
         </PerfectScrollbar>
