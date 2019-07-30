@@ -51,12 +51,12 @@ const Sidebar = props => {
     },
     {
       title: '換幣紀錄',
-      href: '/products',
+      href: '/exchange',
       icon: <ShoppingBasketIcon />
     },
     {
       title: '遊戲紀錄',
-      href: '/products',
+      href: '/history',
       icon: <LockOpenIcon />
     },
     {

@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ProductList = () => {
+const ProductList = (props) => {
   const classes = useStyles();
 
   const [products] = useState(mockData);
@@ -43,7 +43,7 @@ const ProductList = () => {
               md={6}
               xs={12}
             >
-              <ProductCard product={product} />
+              <ProductCard func={props.match.url} product={product} />
             </Grid>
           ))}
         </Grid>

@@ -16,16 +16,22 @@ import {
   NotFound as NotFoundView,
 
   Home,
+  GameHistory,
 } from './views';
 
 const Routes = () => {
   return (
     <Switch>
+      <Redirect
+        exact
+        from="/"
+        to="/home"
+      />
       <RouteWithLayout
         component={Home}
         exact
         layout={MainLayout}
-        path="/"
+        path="/home"
       />
       <RouteWithLayout
         component={UserListView}
@@ -33,12 +39,26 @@ const Routes = () => {
         layout={MainLayout}
         path="/users"
       />
+
       <RouteWithLayout
         component={ProductListView}
         exact
         layout={MainLayout}
-        path="/products"
+        path="/exchange"
       />
+
+      <RouteWithLayout
+        component={ProductListView}
+        exact
+        layout={MainLayout}
+        path="/history"
+      />
+      <RouteWithLayout
+        component={GameHistory}
+        layout={MainLayout}
+        path="/history/:product"
+      />
+
       <RouteWithLayout
         component={TypographyView}
         exact
@@ -81,7 +101,7 @@ const Routes = () => {
         layout={MinimalLayout}
         path="/not-found"
       />
-      <Redirect to="/not-found" />
+      {/*<Redirect to="/not-found" />*/}
     </Switch>
   );
 };

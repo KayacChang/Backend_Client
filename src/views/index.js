@@ -10,3 +10,4 @@ export { default as UserList } from './UserList';
 
 
 export { Home } from './Home';
+export { GameHistory } from './GameHistory';

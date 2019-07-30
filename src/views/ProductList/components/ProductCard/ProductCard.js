@@ -5,13 +5,10 @@ import { makeStyles } from '@material-ui/styles';
 import {
   Card,
   CardContent,
-  CardActions,
-  Typography,
-  Grid,
-  Divider
+  CardActionArea,
+  Typography
 } from '@material-ui/core';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -40,69 +37,37 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const ProductCard = props => {
-  const { className, product, ...rest } = props;
+  const { className, product, func, ...rest } = props;
 
   const classes = useStyles();
+
+  const href = `${func}/${product.title.toLowerCase()}`;
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <CardContent>
-        <div className={classes.imageContainer}>
-          <img
-            alt="Product"
-            className={classes.image}
-            src={product.imageUrl}
-          />
-        </div>
-        <Typography
-          align="center"
-          gutterBottom
-          variant="h4"
-        >
-          {product.title}
-        </Typography>
-        <Typography
-          align="center"
-          variant="body1"
-        >
-          {product.description}
-        </Typography>
-      </CardContent>
-      <Divider />
-      <CardActions>
-        <Grid
-          container
-          justify="space-between"
-        >
-          <Grid
-            className={classes.statsItem}
-            item
-          >
-            <AccessTimeIcon className={classes.statsIcon} />
+      <CardActionArea>
+        <Link to={href}>
+          <CardContent>
+            <div className={classes.imageContainer}>
+              <img
+                alt="Product"
+                className={classes.image}
+                src={product.imageUrl}
+              />
+            </div>
             <Typography
-              display="inline"
-              variant="body2"
+              align="center"
+              variant="h4"
+              gutterBottom
             >
-              Updated 2hr ago
+              {product.title}
             </Typography>
-          </Grid>
-          <Grid
-            className={classes.statsItem}
-            item
-          >
-            <GetAppIcon className={classes.statsIcon} />
-            <Typography
-              display="inline"
-              variant="body2"
-            >
-              {product.totalDownloads} Downloads
-            </Typography>
-          </Grid>
-        </Grid>
-      </CardActions>
+          </CardContent>
+        </Link>
+      </CardActionArea>
     </Card>
   );
 };
