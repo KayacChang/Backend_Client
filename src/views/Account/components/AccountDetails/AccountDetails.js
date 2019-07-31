@@ -68,15 +68,10 @@ const AccountDetails = props => {
         />
         <Divider />
         <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+          <Grid container spacing={3}>
+
+            <Grid item md={6} xs={12}>
+
               <TextField
                 fullWidth
                 helperText="Please specify the first name"
@@ -89,11 +84,9 @@ const AccountDetails = props => {
                 variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+
+            <Grid item md={6} xs={12}>
+
               <TextField
                 fullWidth
                 label="Last name"
@@ -105,6 +98,7 @@ const AccountDetails = props => {
                 variant="outlined"
               />
             </Grid>
+
             <Grid
               item
               md={6}

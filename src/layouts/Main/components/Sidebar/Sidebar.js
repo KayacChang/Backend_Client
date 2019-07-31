@@ -4,11 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Drawer } from '@material-ui/core';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import PeopleIcon from '@material-ui/icons/People';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import TextFieldsIcon from '@material-ui/icons/TextFields';
-import ImageIcon from '@material-ui/icons/Image';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 import { SidebarNav } from './components';
@@ -45,11 +41,6 @@ const Sidebar = props => {
       icon: <DashboardIcon />
     },
     {
-      title: '遊戲公告',
-      href: '/users',
-      icon: <PeopleIcon />
-    },
-    {
       title: '換幣紀錄',
       href: '/exchange',
       icon: <ShoppingBasketIcon />
@@ -58,21 +49,6 @@ const Sidebar = props => {
       title: '遊戲紀錄',
       href: '/history',
       icon: <LockOpenIcon />
-    },
-    {
-      title: '設定維護時間',
-      href: '/typography',
-      icon: <TextFieldsIcon />
-    },
-    {
-      title: '後台帳號管理',
-      href: '/users',
-      icon: <ImageIcon />
-    },
-    {
-      title: '帳戶設定',
-      href: '/account',
-      icon: <AccountBoxIcon />
     },
   ];
 
