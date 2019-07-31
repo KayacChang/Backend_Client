@@ -17,6 +17,7 @@ import {
 
   Home,
   GameHistory,
+  ExchangeHistory,
 } from './views';
 
 const Routes = () => {
@@ -44,15 +45,15 @@ const Routes = () => {
         component={ProductListView}
         exact
         layout={MainLayout}
-        path="/exchange"
+        path={["/exchange", "/history"]}
       />
 
       <RouteWithLayout
-        component={ProductListView}
-        exact
+        component={ExchangeHistory}
         layout={MainLayout}
-        path="/history"
+        path="/exchange/:product"
       />
+
       <RouteWithLayout
         component={GameHistory}
         layout={MainLayout}

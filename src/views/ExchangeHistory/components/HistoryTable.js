@@ -15,10 +15,7 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-
-  Button
 } from '@material-ui/core';
-import { Detail } from './Detail';
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   inner: {
     minWidth: 1050
   },
-  nameContainer: {
+  center: {
     display: 'flex',
     alignItems: 'center'
   },
@@ -42,32 +39,32 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function HistoryHead() {
-  const titles = [
-    '單號', '時間', '用戶ID', '下注', '總得分', '特色遊戲', '詳情'
+
+  const subTitles = [
+    '單號', '用戶 ID', '當前狀態',
+    '換幣時間', '平台幣別', '平台幣數量', '遊戲幣',
+    '遊戲總下注額', '遊戲總贏分'
   ];
 
   return (
     <TableHead>
+
       <TableRow>
-        {titles.map((title) =>
+        <td colSpan={3}/>
+        <TableCell colSpan={4} style={{textAlign: 'center'}}>轉入</TableCell>
+        <TableCell colSpan={2} style={{textAlign: 'center'}}>結算</TableCell>
+      </TableRow>
+
+      <TableRow>
+        {subTitles.map((title) =>
           (<TableCell key={title}>{title}</TableCell>))}
       </TableRow>
+
     </TableHead>
   );
 }
 
 function HistoryBody({ data, rows }) {
-
-  const [record, setSelectedRecord] = useState(undefined);
-
-  function onDetailOpen(record) {
-    setSelectedRecord(record);
-  }
-
-  function onDetailClose() {
-    setSelectedRecord(undefined);
-  }
-
   return (
     <TableBody>
       {data.slice(0, rows).map((record) => (
@@ -75,35 +72,28 @@ function HistoryBody({ data, rows }) {
 
           <TableCell>{record.id}</TableCell>
 
-          <TableCell>
-            {moment.unix(record.createdAt).format('YYYY/MM/DD')}
-          </TableCell>
-
           <TableCell>{record.userID}</TableCell>
 
-          <TableCell>{record.bet}</TableCell>
-
-          <TableCell>{record.totalScores}</TableCell>
-
-          <TableCell>{record.featureGame.length}</TableCell>
+          <TableCell>{record.state}</TableCell>
 
           <TableCell>
-            <Button
-              variant="contained" color="primary" onClick={() => onDetailOpen(record)}>
-              詳情
-            </Button>
+            {moment.unix(record.exchange.createdAt).format('YYYY/MM/DD')}
           </TableCell>
+          <TableCell>{record.exchange.currency}</TableCell>
+          <TableCell>{record.exchange.amount}</TableCell>
+          <TableCell>{record.exchange.balance}</TableCell>
+
+          <TableCell>{record.checkout.totalBet}</TableCell>
+          <TableCell>{record.checkout.totalWin}</TableCell>
 
         </TableRow>
       ))}
-
-      {(record) && <Detail open={true} onClose={onDetailClose} record={record}/>}
     </TableBody>
   );
 }
 
 export const HistoryTable = props => {
-  const { className, users, ...rest } = props;
+  const { className, data, ...rest } = props;
 
   const classes = useStyles();
 
@@ -127,8 +117,8 @@ export const HistoryTable = props => {
         <PerfectScrollbar>
           <div className={classes.inner}>
             <Table>
-              <HistoryHead/>
-              <HistoryBody data={users} rows={rowsPerPage}/>
+              <HistoryHead className={classes.center}/>
+              <HistoryBody data={data}/>
             </Table>
           </div>
         </PerfectScrollbar>
@@ -137,7 +127,7 @@ export const HistoryTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={data.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
@@ -151,5 +141,5 @@ export const HistoryTable = props => {
 
 HistoryTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired
 };

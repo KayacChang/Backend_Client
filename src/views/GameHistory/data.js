@@ -3,7 +3,9 @@ import uuid from 'uuid/v4';
 export default [
   {
     id: uuid(),
-    name: 'Ekaterina Tankova',
+    userID: 'Ekaterina Tankova',
+
+    createdAt: 1561092843,
 
     bet: 10,
     totalScores: 100,
@@ -83,42 +85,10 @@ export default [
   },
   {
     id: uuid(),
-    name: 'Cao Yu',
-    bet: 10,
-    totalScores: 100,
+    userID: 'Cao Yu',
 
-    normalGame: {
-      scores: 5000,
-      result: [9, 1, 6]
-    },
+    createdAt: 1561092843,
 
-    featureGame: [
-      {
-        scores: 5000,
-        result: [7, 1, 6]
-      },
-      {
-        scores: 10000,
-        result: [7, 1, 9]
-      },
-      {
-        scores: 15000,
-        result: [6, 1, 7]
-      },
-      {
-        scores: 120000,
-        result: [6, 1, 6]
-      },
-      {
-        scores: 25000,
-        result: [8, 1, 9]
-      }
-    ]
-
-  },
-  {
-    id: uuid(),
-    name: 'Alexa Richardson',
     bet: 10,
     totalScores: 100,
 
@@ -153,7 +123,10 @@ export default [
   },
   {
     id: uuid(),
-    name: 'Anje Keizer',
+    userID: 'Alexa Richardson',
+
+    createdAt: 1561092843,
+
     bet: 10,
     totalScores: 100,
 
@@ -188,7 +161,10 @@ export default [
   },
   {
     id: uuid(),
-    name: 'Clarke Gillebert',
+    userID: 'Anje Keizer',
+
+    createdAt: 1561092843,
+
     bet: 10,
     totalScores: 100,
 
@@ -223,7 +199,10 @@ export default [
   },
   {
     id: uuid(),
-    name: 'Adam Denisov',
+    userID: 'Clarke Gillebert',
+
+    createdAt: 1561092843,
+
     bet: 10,
     totalScores: 100,
 
@@ -258,7 +237,10 @@ export default [
   },
   {
     id: uuid(),
-    name: 'Ava Gregoraci',
+    userID: 'Adam Denisov',
+
+    createdAt: 1561092843,
+
     bet: 10,
     totalScores: 100,
 
@@ -293,7 +275,10 @@ export default [
   },
   {
     id: uuid(),
-    name: 'Emilee Simchenko',
+    userID: 'Ava Gregoraci',
+
+    createdAt: 1561092843,
+
     bet: 10,
     totalScores: 100,
 
@@ -328,7 +313,10 @@ export default [
   },
   {
     id: uuid(),
-    name: 'Kwak Seong-Min',
+    userID: 'Emilee Simchenko',
+
+    createdAt: 1561092843,
+
     bet: 10,
     totalScores: 100,
 
@@ -363,7 +351,48 @@ export default [
   },
   {
     id: uuid(),
-    name: 'Merrile Burgett',
+    userID: 'Kwak Seong-Min',
+
+    createdAt: 1561092843,
+
+    bet: 10,
+    totalScores: 100,
+
+    normalGame: {
+      scores: 5000,
+      result: [9, 1, 6]
+    },
+
+    featureGame: [
+      {
+        scores: 5000,
+        result: [7, 1, 6]
+      },
+      {
+        scores: 10000,
+        result: [7, 1, 9]
+      },
+      {
+        scores: 15000,
+        result: [6, 1, 7]
+      },
+      {
+        scores: 120000,
+        result: [6, 1, 6]
+      },
+      {
+        scores: 25000,
+        result: [8, 1, 9]
+      }
+    ]
+
+  },
+  {
+    id: uuid(),
+    userID: 'Merrile Burgett',
+
+    createdAt: 1561092843,
+
     bet: 10,
     totalScores: 100,
 

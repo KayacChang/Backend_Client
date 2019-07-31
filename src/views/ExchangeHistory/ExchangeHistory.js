@@ -14,16 +14,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const GameHistory = () => {
+export const ExchangeHistory = () => {
   const classes = useStyles();
 
-  const [users] = useState(mockData);
+  const [data] = useState(mockData);
 
   return (
     <div className={classes.root}>
       <Toolbar />
       <div className={classes.content}>
-        <HistoryTable users={users} />
+        <HistoryTable data={data} />
       </div>
     </div>
   );

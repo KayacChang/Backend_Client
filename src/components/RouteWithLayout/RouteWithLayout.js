@@ -20,7 +20,10 @@ const RouteWithLayout = props => {
 RouteWithLayout.propTypes = {
   component: PropTypes.any.isRequired,
   layout: PropTypes.any.isRequired,
-  path: PropTypes.string
+  path: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string)
+  ])
 };
 
 export default RouteWithLayout;
