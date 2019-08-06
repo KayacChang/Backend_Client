@@ -71,12 +71,12 @@ function HistoryBody({ data, rows }) {
   return (
     <TableBody>
       {data.slice(0, rows).map((record) => (
-        <TableRow hover key={record.id}>
+        <TableRow hover key={record.uid}>
 
-          <TableCell>{record.id}</TableCell>
+          <TableCell>{record.uid}</TableCell>
 
           <TableCell>
-            {moment.unix(record.createdAt).format('YYYY/MM/DD')}
+            {moment(record.time).format('YYYY/MM/DD')}
           </TableCell>
 
           <TableCell>{record.userID}</TableCell>
@@ -103,7 +103,7 @@ function HistoryBody({ data, rows }) {
 }
 
 export const HistoryTable = props => {
-  const { className, users, ...rest } = props;
+  const { className, data, ...rest } = props;
 
   const classes = useStyles();
 
@@ -128,7 +128,7 @@ export const HistoryTable = props => {
           <div className={classes.inner}>
             <Table>
               <HistoryHead/>
-              <HistoryBody data={users} rows={rowsPerPage}/>
+              <HistoryBody data={data} rows={rowsPerPage}/>
             </Table>
           </div>
         </PerfectScrollbar>
@@ -137,7 +137,7 @@ export const HistoryTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={data.length}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
@@ -151,5 +151,5 @@ export const HistoryTable = props => {
 
 HistoryTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  data: PropTypes.array.isRequired
 };

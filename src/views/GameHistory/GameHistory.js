@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
+import axios from 'axios';
+
 import { HistoryTable } from './components';
-import mockData from './data';
 import { Toolbar } from './components/Toolbar';
 
 const useStyles = makeStyles(theme => ({
@@ -14,16 +15,28 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const GameHistory = () => {
+export const GameHistory = (props) => {
   const classes = useStyles();
 
-  const [users] = useState(mockData);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      const {product} = props.match;
+
+      const result = await axios(
+        'http://localhost:8080/games/catpunch/history/date/20190806'
+      );
+
+      setData(result.data);
+    })();
+  }, []);
 
   return (
     <div className={classes.root}>
       <Toolbar />
       <div className={classes.content}>
-        <HistoryTable users={users} />
+        <HistoryTable data={data} />
       </div>
     </div>
   );
