@@ -1,14 +1,12 @@
 import { makeStyles } from '@material-ui/styles';
+import { Checkbox, TextField } from '@material-ui/core';
 import React, { useState } from 'react';
 import check from './check';
-import { TextField } from '@material-ui/core';
 
 const fieldStyle = makeStyles(theme => ({
-
   textField: {
     marginTop: theme.spacing(2)
   }
-
 }));
 
 export function Field(props) {
@@ -47,6 +45,40 @@ export function Field(props) {
 
       onChange={handleChange}
       value={context}
+    />
+  );
+}
+
+const CheckStyle = makeStyles(theme => ({
+  policyCheckbox: {
+    marginLeft: '-14px'
+  }
+}));
+
+export function Check(props) {
+  const { setValue } = props;
+
+  const classes = CheckStyle();
+
+  const [context, setContext] = useState(false);
+
+  function handleChange(event) {
+    event.persist();
+
+    const value = event.target.checked;
+
+    setContext(value);
+    setValue(value);
+  }
+
+  return (
+    <Checkbox
+      className={classes.policyCheckbox}
+      color="primary"
+      name="policy"
+
+      checked={context}
+      onChange={handleChange}
     />
   );
 }

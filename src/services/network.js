@@ -22,7 +22,5 @@ export async function get(url) {
 }
 
 export async function post(url, payload) {
-  const { data } = await proxy.post(url, payload);
-
-  return data;
+  return proxy.post(url, payload);
 }

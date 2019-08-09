@@ -2,22 +2,20 @@ import { Button } from '@material-ui/core';
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(theme => ({
-
-  signInButton: {
+const useStyle = makeStyles(theme => ({
+  button: {
     margin: theme.spacing(2, 0)
   }
-
 }));
 
 export function Submit(props) {
   const { enable } = props;
 
-  const classes = useStyles();
+  const classes = useStyle();
 
   return (
     <Button
-      className={classes.signInButton} fullWidth
+      className={classes.button} fullWidth
       size="large" color="primary"
       variant="contained"
 

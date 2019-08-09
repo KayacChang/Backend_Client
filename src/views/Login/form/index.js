@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
-import { Field, Forget, FormContainer, Submit } from './component';
+import { Field, Forget, FormContainer, Submit } from './components';
 
 import { post } from 'services';
 import { Redirect } from 'react-router-dom';
@@ -40,9 +40,9 @@ export function Form(props) {
     event.preventDefault();
 
     try {
-      const user = await post('users/auth', { email, password });
+      const {data} = await post('users/auth', { email, password });
 
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(data));
 
       return history.push('/');
 
