@@ -6,66 +6,78 @@ import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
 
 import {
   ProductList as ProductListView,
-  SignUp as SignUpView,
-  SignIn as SignInView,
   NotFound as NotFoundView,
 
   Home,
   GameHistory,
   ExchangeHistory,
+  Login,
+  Join
 } from './views';
 
+function currentUser() {
+  return localStorage.getItem('user');
+}
+
+function Protect(props) {
+  return (
+    currentUser() ?
+      <RouteWithLayout {...props}/> : <Redirect to="/login"/>
+  );
+}
+
 const Routes = () => {
+
   return (
     <Switch>
-      <Redirect exact from="/" to="/home"/>
 
-      <RouteWithLayout
+      <Protect
         component={Home}
         exact
         layout={MainLayout}
-        path="/home"
+        path="/"
       />
 
-      <RouteWithLayout
+      <Protect
         component={ProductListView}
         exact
         layout={MainLayout}
-        path={["/exchange", "/history"]}
+        path={['/exchange', '/history']}
       />
 
-      <RouteWithLayout
+      <Protect
         component={ExchangeHistory}
         layout={MainLayout}
         path="/exchange/:product"
       />
 
-      <RouteWithLayout
+      <Protect
         component={GameHistory}
         layout={MainLayout}
         path="/history/:product"
       />
 
       <RouteWithLayout
-        component={SignUpView}
+        component={Login}
         exact
         layout={MinimalLayout}
-        path="/sign-up"
+        path="/login"
       />
+
       <RouteWithLayout
-        component={SignInView}
+        component={Join}
         exact
         layout={MinimalLayout}
-        path="/sign-in"
+        path="/join"
       />
 
       <RouteWithLayout
         component={NotFoundView}
         exact
         layout={MinimalLayout}
-        path="/not-found"
+        path="*"
       />
-      <Redirect to="/not-found" />
+
     </Switch>
   );
 };

@@ -152,15 +152,15 @@ const SignUp = props => {
     errors: {}
   });
 
-  useEffect(() => {
-    const errors = validate(formState.values, schema);
-
-    setFormState(formState => ({
-      ...formState,
-      isValid: errors ? false : true,
-      errors: errors || {}
-    }));
-  }, [formState.values]);
+  // useEffect(() => {
+  //   const errors = validate(formState.values, schema);
+  //
+  //   setFormState(formState => ({
+  //     ...formState,
+  //     isValid: errors ? false : true,
+  //     errors: errors || {}
+  //   }));
+  // }, [formState.values]);
 
   const handleChange = event => {
     event.persist();

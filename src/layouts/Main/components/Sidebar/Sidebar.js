@@ -37,7 +37,7 @@ const Sidebar = props => {
   const pages = [
     {
       title: '首頁',
-      href: '/home',
+      href: '/',
       icon: <DashboardIcon />
     },
     {
