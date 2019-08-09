@@ -5,14 +5,14 @@ import { RouteWithLayout } from './components';
 import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
 
 import {
-  ProductList as ProductListView,
   NotFound as NotFoundView,
 
   Home,
   GameHistory,
   ExchangeHistory,
   Login,
-  Join
+  Join,
+  ProductList,
 } from './views';
 
 function currentUser() {
@@ -39,7 +39,7 @@ const Routes = () => {
       />
 
       <Protect
-        component={ProductListView}
+        component={ProductList}
         exact
         layout={MainLayout}
         path={['/exchange', '/history']}
