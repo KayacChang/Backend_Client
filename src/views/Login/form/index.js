@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/styles';
 import { Field, Forget, FormContainer, Submit } from './components';
 
 import { post } from 'services';
-import { Redirect } from 'react-router-dom';
 
 const FormStyles = makeStyles(theme => ({
 

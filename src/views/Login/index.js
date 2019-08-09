@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/styles';
@@ -16,14 +15,6 @@ const useStyles = makeStyles(theme => ({
   grid: {
     height: '100%'
   },
-  name: {
-    marginTop: theme.spacing(3),
-    color: theme.palette.white
-  },
-  bio: {
-    color: theme.palette.white
-  },
-
 }));
 
 export function Login(props) {
