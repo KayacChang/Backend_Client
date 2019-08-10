@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import { HistoryTable, Toolbar } from './components';
 
-import {get} from 'services';
+import { get } from 'services';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,6 +19,7 @@ export function ExchangeHistory(props) {
 
   const { product } = props.match.params;
 
+  const [origin, setOrigin] = useState([]);
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -32,16 +33,17 @@ export function ExchangeHistory(props) {
       const { data } = await get(`/exchange/${product}`, config);
 
       setData(data);
+      setOrigin(data);
     })();
-  }, [data.length, product]);
+  }, [product]);
 
   return (
     <div className={classes.root}>
-      <Toolbar/>
+      <Toolbar data={origin} setData={setData}/>
       <div className={classes.content}>
         <HistoryTable data={data}/>
       </div>
     </div>
   );
-};
+}
 

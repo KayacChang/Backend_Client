@@ -1,9 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
-import {Search} from '@material-ui/icons'
+import { Search } from '@material-ui/icons';
 
 import { SearchInput } from './SearchInput';
 
@@ -31,23 +29,35 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const Toolbar = props => {
-  const { className, ...rest } = props;
+export function Toolbar(props) {
+  const { data, setData } = props;
 
   const classes = useStyles();
 
+  function findByID(event) {
+    let target = data;
+
+    const targetID = event.target.value;
+
+    if (targetID) {
+      target = data.filter(({ id }) => id === Number(targetID));
+    }
+
+    setData(target);
+  }
+
   return (
     <div
-      {...rest}
-      className={clsx(classes.root, className)}>
+      className={classes.root}>
 
       <div className={classes.row}>
 
-        <Search />
+        <Search/>
 
         <SearchInput
           className={classes.searchInput}
           placeholder="單號"
+          onChange={findByID}
         />
 
         <SearchInput
@@ -87,9 +97,5 @@ export const Toolbar = props => {
 
     </div>
   );
-};
-
-Toolbar.propTypes = {
-  className: PropTypes.string
-};
+}
 

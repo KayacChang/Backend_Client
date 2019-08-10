@@ -14,7 +14,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TablePagination,
+  TablePagination
 } from '@material-ui/core';
 
 
@@ -51,8 +51,8 @@ function HistoryHead() {
 
       <TableRow>
         <td colSpan={3}/>
-        <TableCell colSpan={4} style={{textAlign: 'center'}}>轉入</TableCell>
-        <TableCell colSpan={2} style={{textAlign: 'center'}}>結算</TableCell>
+        <TableCell colSpan={4} style={{ textAlign: 'center' }}>轉入</TableCell>
+        <TableCell colSpan={2} style={{ textAlign: 'center' }}>結算</TableCell>
       </TableRow>
 
       <TableRow>
@@ -64,10 +64,13 @@ function HistoryHead() {
   );
 }
 
-function HistoryBody({ data, rows }) {
+function HistoryBody({ data, rows, page }) {
+  const from = page * rows;
+  const to = from + rows;
+
   return (
     <TableBody>
-      {data.slice(0, rows).map((record) => (
+      {data.slice(from, to).map((record) => (
         <TableRow hover key={record.id}>
 
           <TableCell>{record.id}</TableCell>
@@ -77,7 +80,7 @@ function HistoryBody({ data, rows }) {
           <TableCell>{record.state}</TableCell>
 
           <TableCell>
-            {moment.unix(record.exchange.createdAt).format('YYYY/MM/DD')}
+            {moment(record.exchange.time).format('YYYY/MM/DD')}
           </TableCell>
           <TableCell>{record.exchange.currency}</TableCell>
           <TableCell>{record.exchange.amount}</TableCell>
@@ -100,13 +103,13 @@ export const HistoryTable = props => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handlePageChange = (event, page) => {
+  function onChangePage(event, page) {
     setPage(page);
-  };
+  }
 
-  const handleRowsPerPageChange = event => {
+  function onChangeRowsPerPage(event) {
     setRowsPerPage(event.target.value);
-  };
+  }
 
   return (
     <Card
@@ -118,7 +121,7 @@ export const HistoryTable = props => {
           <div className={classes.inner}>
             <Table>
               <HistoryHead className={classes.center}/>
-              <HistoryBody data={data}/>
+              <HistoryBody data={data} rows={rowsPerPage} page={page}/>
             </Table>
           </div>
         </PerfectScrollbar>
@@ -128,8 +131,8 @@ export const HistoryTable = props => {
         <TablePagination
           component="div"
           count={data.length}
-          onChangePage={handlePageChange}
-          onChangeRowsPerPage={handleRowsPerPageChange}
+          onChangePage={onChangePage}
+          onChangeRowsPerPage={onChangeRowsPerPage}
           page={page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[5, 10, 25]}
