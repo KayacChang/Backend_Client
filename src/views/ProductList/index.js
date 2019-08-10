@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { IconButton, Grid, Typography } from '@material-ui/core';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -6,7 +6,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
 import { Toolbar, ProductCard } from './components';
 
-import mockData from './data';
+import { get } from 'services';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,7 +26,24 @@ const useStyles = makeStyles(theme => ({
 export function ProductList(props) {
   const classes = useStyles();
 
-  const [products] = useState(mockData);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    async function getProducts() {
+      const config = {
+        headers: {
+          Authorization: JSON.parse(localStorage.user).token
+        }
+      };
+
+      const {data} = await get('/products', config);
+
+      setProducts(data);
+    }
+
+    getProducts();
+
+  }, [products.length]);
 
   function Content() {
     return (

@@ -48,7 +48,7 @@ export function ProductCard(props) {
 
   const classes = useStyles();
 
-  const { name, image, } = product;
+  const { name, imageURL, } = product;
 
   const href = `${func}/${name.toLowerCase()}`;
 
@@ -67,7 +67,7 @@ export function ProductCard(props) {
   function Image() {
     return (
       <div className={classes.imageContainer}>
-        <img alt="Product" className={classes.image} src={image}/>
+        <img alt="Product" className={classes.image} src={imageURL}/>
       </div>
     );
   }
