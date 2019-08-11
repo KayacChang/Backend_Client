@@ -80,7 +80,7 @@ function HistoryBody({ data, rows, page }) {
           <TableCell>{record.state}</TableCell>
 
           <TableCell>
-            {moment(record.exchange.time).format('YYYY/MM/DD')}
+            {moment(record.exchange.time).format('YYYY/MM/DD HH:mm')}
           </TableCell>
           <TableCell>{record.exchange.currency}</TableCell>
           <TableCell>{record.exchange.amount}</TableCell>

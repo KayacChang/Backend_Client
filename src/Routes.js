@@ -16,7 +16,13 @@ import {
 } from './views';
 
 function currentUser() {
-  return localStorage.getItem('user');
+  const {exp} = JSON.parse(localStorage.getItem('user'));
+
+  const isExpired = Date.now() > exp * 1000;
+
+  if ( isExpired ) localStorage.removeItem('user');
+
+  return !isExpired;
 }
 
 function Protect(props) {
