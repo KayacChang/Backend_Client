@@ -20,7 +20,7 @@ function currentUser() {
 
   const isExpired = Date.now() > exp * 1000;
 
-  if ( isExpired ) localStorage.removeItem('user');
+  if ( isExpired ) localStorage.clear();
 
   return !isExpired;
 }

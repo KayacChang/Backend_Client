@@ -13,8 +13,7 @@ const config = {
   baseURL: 'http://localhost:8080/',
   headers: {
     'Content-Type': MEDIA_TYPE.JSON + '; ' + UTF8
-  },
-  timeout: 10000
+  }
 };
 
 export async function get(url, options = {}) {

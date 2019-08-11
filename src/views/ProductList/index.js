@@ -30,15 +30,18 @@ export function ProductList(props) {
 
   useEffect(() => {
     async function getProducts() {
+
       const config = {
         headers: {
           Authorization: JSON.parse(localStorage.user).token
         }
       };
 
-      const {data} = await get('/products', config);
+      const { data } = await get('/products', config);
 
       setProducts(data);
+
+      localStorage.setItem('products', JSON.stringify(data));
     }
 
     getProducts();

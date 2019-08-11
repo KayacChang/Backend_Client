@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import { HistoryTable } from './components';
 import { Toolbar } from './components/Toolbar';
 
-import { get } from 'services';
+import { get, getCacheDB } from '../../services';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,11 +29,36 @@ export function GameHistory(props) {
         }
       };
 
-      const { data } = await get(`/history/${product}`, config);
+      const tables =
+        JSON.parse(localStorage.getItem('products'))
+          .find(({ name }) => name === product)
+          .tables
+          .sort((a, b) => b.name - a.name);
+
+      console.log(tables);
+
+      const tasks =
+        tables.map(({name}) =>
+          get(`/history/${product}/${name}`, config)
+        );
+
+      const res = await Promise.all(tasks);
+
+      const data = res.map(({ data }) => data).flat();
+
+      getCacheDB().then((db) => {
+        const transaction = db.transaction('History', 'readwrite');
+
+        const store = transaction.objectStore('History');
+
+        data.forEach((record) => store.add(record));
+
+        return transaction.complete;
+      });
 
       setData(data);
     })();
-  }, [data.length, product]);
+  }, [product]);
 
   return (
     <div className={classes.root}>
