@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import moment from 'moment';
 
 import { HistoryTable } from './components';
 import { Toolbar } from './components/Toolbar';
 
-import { get, getCacheDB } from '../../services';
+import { get } from '../../services';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,52 +20,39 @@ export function GameHistory(props) {
   const classes = useStyles();
   const { product } = props.match.params;
 
+  const [origin, setOrigin] = useState([]);
   const [data, setData] = useState([]);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     (async () => {
+
       const config = {
         headers: {
           Authorization: JSON.parse(localStorage.user).token
         }
       };
 
-      const tables =
-        JSON.parse(localStorage.getItem('products'))
-          .find(({ name }) => name === product)
-          .tables
-          .sort((a, b) => b.name - a.name);
+      const current = '20190814';
 
-      console.log(tables);
+      const [historyRes, countRes] =
+        await Promise.all([
+          get(`/history/${product}/${current}`, config),
+          get(`/counts/${product}`, config)
+        ]);
 
-      const tasks =
-        tables.map(({name}) =>
-          get(`/history/${product}/${name}`, config)
-        );
+      setCount(countRes.data.count);
 
-      const res = await Promise.all(tasks);
-
-      const data = res.map(({ data }) => data).flat();
-
-      getCacheDB().then((db) => {
-        const transaction = db.transaction('History', 'readwrite');
-
-        const store = transaction.objectStore('History');
-
-        data.forEach((record) => store.add(record));
-
-        return transaction.complete;
-      });
-
-      setData(data);
+      setOrigin(historyRes.data);
+      setData(historyRes.data);
     })();
   }, [product]);
 
   return (
     <div className={classes.root}>
-      <Toolbar/>
+      <Toolbar data={origin} setData={setData}/>
       <div className={classes.content}>
-        <HistoryTable data={data}/>
+        <HistoryTable data={data} count={count}/>
       </div>
     </div>
   );

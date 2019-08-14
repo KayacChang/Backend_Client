@@ -1,34 +1,21 @@
+import { openDB } from 'idb';
+
+
 let cacheDB = undefined;
 
-function onupgradeneeded(event) {
-  const db = event.target.result;
+export async function getProductDB() {
 
-  const { objectStoreNames } = db;
-
-  if (!objectStoreNames.contains('History')) {
-    HistoryTable(db);
-  }
-}
-
-function HistoryTable(db) {
-  const name = 'History';
-
-  const peopleOS = db.createObjectStore('History', { keyPath: 'uid' });
-}
-
-export async function getCacheDB() {
   if (!cacheDB) {
-    const request = indexedDB.open('CacheDB', 1);
-
-    request.onupgradeneeded = onupgradeneeded;
-
-    return new Promise((resolve) => {
-      request.onsuccess = (event) => {
-        cacheDB = event.target.result;
-
-        resolve(cacheDB);
-      };
+    cacheDB = await openDB('Cache', 1, {
+      upgrade
     });
   }
+
   return cacheDB;
+
+  function upgrade(db) {
+    db.createObjectStore('products', { keyPath: 'id' });
+
+  }
 }
+

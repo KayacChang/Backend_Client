@@ -83,9 +83,54 @@ export function Detail(props) {
   const normalGameTitles = [
     '主遊戲得分', '主遊戲結果'
   ];
-  const featureGameTitles = [
-    '特色遊戲得分', '特色遊戲結果'
-  ];
+
+  const featureGameTitles = {
+    freeGame: ['免費遊戲得分', '免費遊戲結果'],
+    reSpin: ['重轉遊戲得分', '重轉遊戲結果']
+  };
+
+  function hasFeatureGame(record) {
+    for (const game of Object.values(record.featureGame)) {
+      if (game.length > 0) return true;
+    }
+  }
+
+  function GameSection(reSpin, titles) {
+    return (
+      <Table>
+        <Header titles={titles}/>
+
+        <TableBody>
+          {reSpin.map((game, index) => (
+            <Record
+              key={String(index)}
+              scores={game.scores}
+              result={game.result}/>
+          ))}
+        </TableBody>
+
+      </Table>
+    );
+  }
+
+  function FeatureGameSection(record) {
+    if (!hasFeatureGame(record)) return;
+
+    const { reSpin, freeGame } = record.featureGame;
+
+    return (
+      <DialogContent>
+        {
+          reSpin.length ?
+            GameSection(reSpin, featureGameTitles['reSpin']) : null
+        }
+        {
+          freeGame.length ?
+            GameSection(freeGame, featureGameTitles['freeGame']) : null
+        }
+      </DialogContent>
+    );
+  }
 
   return (
     <Dialog onClose={onClose} open={open} fullWidth={true} maxWidth={'md'}>
@@ -119,21 +164,7 @@ export function Detail(props) {
           </Table>
         </DialogContent>
 
-        <DialogContent>
-          <Table>
-            <Header titles={featureGameTitles}/>
-
-            <TableBody>
-              {record.featureGame.map((game, index) => (
-                <Record
-                  key={String(index)}
-                  scores={game.scores}
-                  result={game.result}/>
-              ))}
-            </TableBody>
-
-          </Table>
-        </DialogContent>
+        {FeatureGameSection(record)}
 
       </PerfectScrollbar>
 

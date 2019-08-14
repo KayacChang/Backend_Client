@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Paper, Input } from '@material-ui/core';
 
@@ -10,7 +8,8 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     padding: theme.spacing(1),
     display: 'flex',
-    flexBasis: 420
+    flexBasis: 420,
+    margin: theme.spacing(1)
   },
   icon: {
     marginRight: theme.spacing(1),
@@ -24,17 +23,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export const SearchInput = props => {
-  const { className, onChange, style, ...rest } = props;
+export function SearchInput(props) {
+  const { onChange, ...rest } = props;
 
   const classes = useStyles();
 
   return (
     <Paper
       {...rest}
-      className={clsx(classes.root, className)}
-      style={style}
-    >
+      className={classes.root}>
 
       <Input
         {...rest}
@@ -45,11 +42,5 @@ export const SearchInput = props => {
 
     </Paper>
   );
-};
-
-SearchInput.propTypes = {
-  className: PropTypes.string,
-  onChange: PropTypes.func,
-  style: PropTypes.object
-};
+}
 
