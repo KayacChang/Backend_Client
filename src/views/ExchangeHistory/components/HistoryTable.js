@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -71,9 +70,9 @@ function HistoryBody({ data, rows, page }) {
   return (
     <TableBody>
       {data.slice(from, to).map((record) => (
-        <TableRow hover key={record.id}>
+        <TableRow hover key={record.uid}>
 
-          <TableCell>{record.id}</TableCell>
+          <TableCell>{record.uid}</TableCell>
 
           <TableCell>{record.userID}</TableCell>
 
@@ -96,7 +95,7 @@ function HistoryBody({ data, rows, page }) {
 }
 
 export const HistoryTable = props => {
-  const { className, data, ...rest } = props;
+  const { data, count } = props;
 
   const classes = useStyles();
 
@@ -112,9 +111,7 @@ export const HistoryTable = props => {
   }
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}>
+    <Card className={classes.root}>
 
       <CardContent className={classes.content}>
         <PerfectScrollbar>
@@ -130,7 +127,7 @@ export const HistoryTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={data.length}
+          count={count}
           onChangePage={onChangePage}
           onChangeRowsPerPage={onChangeRowsPerPage}
           page={page}

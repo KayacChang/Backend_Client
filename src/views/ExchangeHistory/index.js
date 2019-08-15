@@ -21,6 +21,7 @@ export function ExchangeHistory(props) {
 
   const [origin, setOrigin] = useState([]);
   const [data, setData] = useState([]);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -30,10 +31,15 @@ export function ExchangeHistory(props) {
         }
       };
 
-      const { data } = await get(`/exchange/${product}`, config);
+      const [orderRes, countRes] =
+        await Promise.all([
+          get(`/exchange/${product}`, config),
+          get(`/exchange-counts/${product}`, config)
+        ]);
 
-      setData(data);
-      setOrigin(data);
+      setData(orderRes.data);
+      setOrigin(orderRes.data);
+      setCount(countRes.data.count);
     })();
   }, [product]);
 
@@ -41,7 +47,7 @@ export function ExchangeHistory(props) {
     <div className={classes.root}>
       <Toolbar data={origin} setData={setData}/>
       <div className={classes.content}>
-        <HistoryTable data={data}/>
+        <HistoryTable data={data} count={count}/>
       </div>
     </div>
   );
