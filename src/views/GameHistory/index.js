@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import moment from 'moment';
+
+import { splitEvery } from 'ramda';
 
 import { HistoryTable } from './components';
 import { Toolbar } from './components/Toolbar';
@@ -16,44 +17,113 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const fetchConfig = {
+  headers: {
+    Authorization: JSON.parse(localStorage.user).token
+  }
+};
+
+async function fetchHistory(product, params) {
+
+  const search = params ? '?' + new URLSearchParams(params) : '';
+
+  const url = `/history/${product}${search}`;
+
+  const { data } = await get(url, fetchConfig);
+
+  return data;
+}
+
+async function fetchCount(product) {
+  const url = `/history-counts/${product}`;
+
+  const { data } = await get(url, fetchConfig);
+
+  return data.counts;
+}
+
 export function GameHistory(props) {
   const classes = useStyles();
   const { product } = props.match.params;
 
-  const [origin, setOrigin] = useState([]);
   const [data, setData] = useState([]);
+
+  const [displayData, setDisplayData] = useState([[]]);
+
   const [count, setCount] = useState(0);
+
+  const [page, setPage] = useState(0);
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const [fetching, setFetching] = useState(undefined);
 
   useEffect(() => {
     (async () => {
 
-      const config = {
-        headers: {
-          Authorization: JSON.parse(localStorage.user).token
-        }
-      };
-
-      const current = '20190814';
-
-      const [historyRes, countRes] =
+      const [history, count] =
         await Promise.all([
-          get(`/history/${product}/${current}`, config),
-          get(`/counts/${product}`, config)
+          fetchHistory(product),
+          fetchCount(product)
         ]);
 
-      setCount(countRes.data.count);
+      setCount(count);
 
-      setOrigin(historyRes.data);
-      setData(historyRes.data);
+      setData(history);
     })();
   }, [product]);
 
+  useEffect(() => {
+    if (!data.length) return;
+
+    const displayData = splitEvery(rowsPerPage, data);
+
+    setDisplayData(displayData);
+
+  }, [data, rowsPerPage]);
+
+  async function onChangePage(event, page) {
+    if (displayData.length > page) setPage(page);
+
+    const from = data.length;
+    const limit = 10 * rowsPerPage;
+
+    const dontFetch =
+      data.length === count ||
+      page * rowsPerPage < data.length / 2 ||
+      fetching === from;
+
+    if (dontFetch) return;
+
+    setFetching(from);
+
+    const newData = await fetchHistory(product, { from, limit });
+
+    setFetching(undefined);
+
+    if (!newData) return;
+
+    setData([...data, ...newData]);
+  }
+
+  function onChangeRowsPerPage(event) {
+    setRowsPerPage(event.target.value);
+    setPage(0);
+  }
+
   return (
     <div className={classes.root}>
-      <Toolbar data={origin} setData={setData}/>
+      <Toolbar data={data} setData={setData}/>
+
       <div className={classes.content}>
-        <HistoryTable data={data} count={count}/>
+        <HistoryTable
+          data={displayData[page]}
+          count={count}
+          page={page} onChangePage={onChangePage}
+          rowsPerPage={rowsPerPage} onChangeRowsPerPage={onChangeRowsPerPage}
+        />
       </div>
+
     </div>
   );
 }

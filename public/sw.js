@@ -1,108 +1,64 @@
-const version = 3;
+// =====================================
+const VERSION = 1;
 
-const cacheName = `cache-${version}`;
+const CACHE_NAME = `cache-${VERSION}`;
 
-const on =
-  (evt, callback) => self.addEventListener(evt, callback);
-
-on('install', onInstall);
-on('activate', onActivate);
-on('message', onMessage);
+// =====================================
 
 main().catch(console.error);
 
-// =============================
-
 async function main() {
-  console.log(`Service Worker ver: ${version} is starting...`);
+  console.log(`Service Worker ver ${VERSION} starting...`);
 }
 
+// =====================================
+
+on('install', onInstall);
+
 function onInstall() {
-  console.log(`Service Worker ver: ${version} installed...`);
+  console.log(`Service Worker ver ${VERSION} installed...`);
 
   return self.skipWaiting();
 }
+
+// =====================================
+
+on('activate', onActivate);
 
 function onActivate(evt) {
   evt.waitUntil(handleActivation());
 }
 
 async function handleActivation() {
-  await clearCaches();
-
-  await cacheFiles(true);
-
   await self.clients.claim();
 
-  console.log(`Service Worker ver: ${version} activated...`);
+  console.log(`Service Worker ver ${VERSION} activated...`);
 }
 
-async function clearCaches() {
-  const cacheNames = await caches.keys();
+// =====================================
 
-  const oldCacheNames = cacheNames.filter(matchOldCache);
+// on('fetch', onFetch);
 
-  return Promise.all(
-    oldCacheNames.map(deleteCache)
-  );
+function onFetch(evt) {
+  const req = evt.request;
 
-  function matchOldCache(name) {
+  const url = new URL(req.url);
 
-    if (/^cache-\d+$/.test(name)) {
-      let [, ver] = name.match(/^cache-(\d+)$/);
-
-      ver = ver && Number(ver);
-
-      return (ver > 0 && ver !== version);
-    }
-  }
-
-  function deleteCache(name) {
-    return caches.delete(name);
-  }
-}
-
-async function sendMessage(msg) {
+  // if (isSameOrigin(url))
+  //   return evt.respondWith(cacheFirst(req));
 
 }
 
-function onMessage(evt) {
-  const { data } = evt;
-
-  console.log(data);
+function cacheFirst(req) {
 }
 
-const urlsToCache = [
-  'static/js/main.chunk.js'
-];
 
-async function cacheFiles(forceReload = false) {
-  const cache = await caches.open(cacheName);
+function isSameOrigin(url) {
+  return url.origin === location.origin;
+}
 
-  return Promise.all(
-    urlsToCache.map(requestFile)
-  );
 
-  async function requestFile(url) {
-    try {
-      if (!forceReload) {
-        const res = await cache.match(url);
-
-        if (res) return res;
-      }
-
-      const options = {
-        method: 'GET',
-        cache: 'no-cache',
-        credentials: 'omit'
-      };
-
-      const res = await fetch(url, options);
-
-      if (res.ok) await cache.put(url, res);
-
-    } catch (e) {
-      console.error(e);
-    }
-  }
+// =====================================
+function on(evt, callback) {
+  return self.addEventListener(evt, callback);
 }

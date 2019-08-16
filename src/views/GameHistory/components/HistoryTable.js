@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -56,10 +55,7 @@ function HistoryHead() {
   );
 }
 
-function HistoryBody({ data, rows, page }) {
-
-  const from = page * rows;
-  const to = from + rows;
+function HistoryBody({ data }) {
 
   const [record, setSelectedRecord] = useState(undefined);
 
@@ -73,13 +69,13 @@ function HistoryBody({ data, rows, page }) {
 
   function hasFeatureGame(record) {
     for (const game of Object.values(record.featureGame)) {
-      if (game.length > 0) return String(true)
+      if (game.length > 0) return String(true);
     }
   }
 
   return (
     <TableBody>
-      {data.slice(from, to).map((record) => (
+      {data.map((record) => (
         <TableRow hover key={record.uid}>
 
           <TableCell>{record.uid}</TableCell>
@@ -111,33 +107,24 @@ function HistoryBody({ data, rows, page }) {
   );
 }
 
-export const HistoryTable = props => {
-  const { className, data, count, ...rest } = props;
+export function HistoryTable(props) {
+  const {
+    data, count,
+    page, onChangePage,
+    rowsPerPage, onChangeRowsPerPage
+  } = props;
 
   const classes = useStyles();
 
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(0);
-
-  function onChangePage(event, page) {
-    setPage(page);
-  }
-
-  function onChangeRowsPerPage(event) {
-    setRowsPerPage(event.target.value);
-  }
-
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}>
+    <Card className={classes.root}>
 
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
             <Table>
               <HistoryHead/>
-              <HistoryBody data={data} rows={rowsPerPage} page={page}/>
+              <HistoryBody data={data}/>
             </Table>
           </div>
         </PerfectScrollbar>
@@ -146,9 +133,11 @@ export const HistoryTable = props => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={count}
+
           onChangePage={onChangePage}
           onChangeRowsPerPage={onChangeRowsPerPage}
+
+          count={count}
           page={page}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={[5, 10, 25]}
@@ -156,9 +145,4 @@ export const HistoryTable = props => {
       </CardActions>
     </Card>
   );
-};
-
-HistoryTable.propTypes = {
-  className: PropTypes.string,
-  data: PropTypes.array.isRequired
-};
+}

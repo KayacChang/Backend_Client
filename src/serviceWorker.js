@@ -1,23 +1,16 @@
-const support = 'serviceWorker' in navigator;
-
-let isOnline = 'onLine' in navigator ? navigator.onLine : true;
-
-const config = {
-  updateViaCache: 'none'
-};
-
+//
 export async function register() {
-  if (!support) return;
+  //  Check support
+  if (!('serviceWorker' in navigator)) return;
 
-  const { serviceWorker } = navigator;
+  try {
+    const registration =
+      await navigator.serviceWorker
+        .register(`${process.env.PUBLIC_URL}/sw.js`);
 
-  const registration =
-    await serviceWorker.register(`${process.env.PUBLIC_URL}/sw.js`, config);
-
-  serviceWorker.addEventListener('message', onMessage);
-
-  window.post = function(msg) {
-    serviceWorker.controller.postMessage(msg);
+    console.log('Service Worker registration succeeded', registration);
+  } catch (err) {
+    console.error('Service Worker registration failed', err);
   }
 }
 

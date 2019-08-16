@@ -16,9 +16,11 @@ import {
 } from './views';
 
 function currentUser() {
-  const {exp} = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem('user'));
 
-  const isExpired = Date.now() > exp * 1000;
+  if (!user) return;
+
+  const isExpired = Date.now() > user.exp * 1000;
 
   if ( isExpired ) localStorage.clear();
 
