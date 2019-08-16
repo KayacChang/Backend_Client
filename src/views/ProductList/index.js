@@ -46,7 +46,7 @@ export function ProductList(props) {
 
     getProducts();
 
-  }, [products.length]);
+  }, []);
 
   function Content() {
     return (

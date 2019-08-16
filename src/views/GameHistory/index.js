@@ -17,13 +17,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const fetchConfig = {
-  headers: {
-    Authorization: JSON.parse(localStorage.user).token
-  }
-};
+
 
 async function fetchHistory(product, params) {
+  const fetchConfig = {
+    headers: {
+      Authorization: JSON.parse(localStorage.user).token
+    }
+  };
 
   const search = params ? '?' + new URLSearchParams(params) : '';
 
@@ -35,6 +36,12 @@ async function fetchHistory(product, params) {
 }
 
 async function fetchCount(product) {
+  const fetchConfig = {
+    headers: {
+      Authorization: JSON.parse(localStorage.user).token
+    }
+  };
+
   const url = `/history-counts/${product}`;
 
   const { data } = await get(url, fetchConfig);
@@ -45,6 +52,8 @@ async function fetchCount(product) {
 export function GameHistory(props) {
   const classes = useStyles();
   const { product } = props.match.params;
+
+
 
   const [data, setData] = useState([]);
 

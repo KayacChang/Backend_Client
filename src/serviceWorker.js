@@ -13,20 +13,3 @@ export async function register() {
     console.error('Service Worker registration failed', err);
   }
 }
-
-function onMessage(evt) {
-  const { data } = evt;
-  console.log(`Received status update request from service worker.`);
-}
-
-
-function registerValidSW(swUrl, config) {
-
-}
-
-function checkValidServiceWorker(swUrl, config) {
-}
-
-export function unregister() {
-
-}
