@@ -73,6 +73,8 @@ function HistoryBody({ data }) {
     }
   }
 
+  if (!data) return null;
+
   return (
     <TableBody>
       {data.map((record) => (

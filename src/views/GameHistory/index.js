@@ -17,8 +17,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
-
 async function fetchHistory(product, params) {
   const fetchConfig = {
     headers: {
@@ -53,8 +51,6 @@ export function GameHistory(props) {
   const classes = useStyles();
   const { product } = props.match.params;
 
-
-
   const [data, setData] = useState([]);
 
   const [displayData, setDisplayData] = useState([[]]);
@@ -83,7 +79,6 @@ export function GameHistory(props) {
   }, [product]);
 
   useEffect(() => {
-    if (!data.length) return;
 
     const displayData = splitEvery(rowsPerPage, data);
 
@@ -122,7 +117,12 @@ export function GameHistory(props) {
 
   return (
     <div className={classes.root}>
-      <Toolbar data={data} setData={setData}/>
+      <Toolbar
+        data={data} setData={setData}
+        page={page}
+        onChangePage={onChangePage}
+        fetchHistory={(params) => fetchHistory(product, params)}
+      />
 
       <div className={classes.content}>
         <HistoryTable

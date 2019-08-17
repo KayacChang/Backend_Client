@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
@@ -6,6 +6,7 @@ import { Search } from '@material-ui/icons';
 import { SearchInput } from './SearchInput';
 
 import moment from 'moment';
+import { get } from '../../../services';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     marginRight: theme.spacing(1)
-  },
+  }
 
 }));
 
@@ -34,17 +35,28 @@ const timeRule = {
 };
 
 export function Toolbar(props) {
-  const { data, setData } = props;
+  const { data, setData, fetchHistory, page, onChangePage } = props;
 
   const classes = useStyles();
 
-  function findByID(event) {
-    const target =
-      !(event.target.value) ?
-        data :
-        data.filter(({ uid }) => uid == event.target.value);
+  const [throttle, setThrottle] = useState(false);
 
-    setData(target);
+  async function findByID(event) {
+    const uid = (event.target.value);
+
+    if (uid === '') {
+      return onChangePage(page);
+    }
+
+    if (uid.length < 9 || throttle) return;
+
+    setThrottle(true);
+
+    const result = await fetchHistory({ uid });
+
+    setData(result);
+
+    setThrottle(false);
   }
 
   function findByUser(event) {
