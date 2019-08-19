@@ -3,9 +3,10 @@ import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 
-import { SearchInput } from './SearchInput';
+import { SearchInput, TimeInput } from './SearchInput';
 
-import moment from 'moment';
+import { clone, isEmpty } from 'ramda';
+import { debounce } from 'lodash';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,77 +25,116 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     marginRight: theme.spacing(1)
-  },
+  }
 
 }));
 
-const timeRule = {
-  from: 0,
-  to: Date.now()
-};
-
 export function Toolbar(props) {
-  const { data, setData } = props;
+  const { setData, setPage, setCount, filter, setFilter, fetch } = props;
 
   const classes = useStyles();
 
-  function findByID(event) {
-    const target =
-      !(event.target.value) ?
-        data :
-        data.filter(({ id }) => id === Number(event.target.value));
+  function findByID(filter, uid) {
 
-    setData(target);
-  }
+    if (!uid) {
+      delete filter['uid'];
 
-  function findByUser(event) {
-    const target =
-      !(event.target.value) ?
-        data :
-        data.filter(({ userID }) => userID === event.target.value);
-
-    setData(target);
-  }
-
-  function isDateFormat(str) {
-    const rule = /([12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01]))/g;
-
-    return rule.test(str);
-  }
-
-  function onTimeChange(event) {
-    const input = event.target.value;
-
-    const key = event.target.name;
-
-    if (isDateFormat(input)) {
-      const time = moment(input, 'YYYYMMDDHHmm');
-
-      if (key === 'to') time.add(1, 'd');
-
-      timeRule[key] = time.valueOf();
-
-      filterByTime();
+      return filter;
     }
 
-    if (input === '') {
-      timeRule[key] = { from: 0, to: Date.now() }[key];
+    filter['uid'] = uid;
 
-      filterByTime();
-    }
+    return filter;
   }
 
-  function filterByTime() {
-    const { from, to } = timeRule;
+  function findByUser(filter, userID) {
 
-    const target =
-      data.filter((record) => {
-        const time = record.exchange.time;
+    if (!userID) {
+      delete filter['userID'];
 
-        return to >= time && time >= from;
-      });
+      return filter;
+    }
 
-    setData(target);
+    filter['userID'] = userID;
+
+    return filter;
+  }
+
+  function matchDateTime(str) {
+    return /^(\d{4})(\d{2})(\d{2})(\d{2})?(\d{2})?$/.exec(str);
+  }
+
+  function findByTimeStart(filter, value) {
+    const name = 'timeStart';
+
+    if (value.length < 8) {
+      delete filter[name];
+
+      return filter;
+    }
+
+    let [, year, month, day, hours, minutes] = matchDateTime(value);
+
+    if (!hours) hours = '00';
+    if (!minutes) minutes = '00';
+
+    filter[name] = [year, month, day, hours, minutes].join('');
+
+    return filter;
+  }
+
+  function findByTimeEnd(filter, value) {
+    const name = 'timeEnd';
+
+    if (value.length < 8) {
+      delete filter[name];
+
+      return filter;
+    }
+
+    let [, year, month, day, hours, minutes] = matchDateTime(value);
+
+    if (!hours) hours = '23';
+    if (!minutes) minutes = '59';
+
+    filter[name] = [year, month, day, hours, minutes].join('');
+
+    return filter;
+  }
+
+  function checkFilter(func, value) {
+
+    const newFilter = func(clone(filter), value);
+
+    setFilter(newFilter);
+
+    return newFilter;
+  }
+
+  function onChange(func) {
+
+    const execute = debounce(execution, 300);
+
+    return function(arg) {
+      if (arg.target) return execute(arg.target.value);
+
+      return execute(arg);
+    };
+
+    async function execution(value) {
+
+      const newFilter = checkFilter(func, value);
+
+      const history = await fetch(newFilter);
+
+      if (!history) return;
+
+      if (!isEmpty(newFilter)) setCount(history.length);
+
+      setData(history);
+
+      setPage(0);
+    }
   }
 
   return (
@@ -107,26 +147,24 @@ export function Toolbar(props) {
 
         <SearchInput
           placeholder="單號"
-          onChange={findByID}
+          onChange={onChange(findByID)}
         />
 
         <SearchInput
           placeholder="用戶ID"
-          onChange={findByUser}
+          onChange={onChange(findByUser)}
         />
 
-        <SearchInput
-          name="from"
+        <TimeInput
           placeholder="開始時間"
-          onChange={onTimeChange}
+          onChange={onChange(findByTimeStart)}
         />
 
         <span>-</span>
 
-        <SearchInput
-          name="to"
+        <TimeInput
           placeholder="結束時間"
-          onChange={onTimeChange}
+          onChange={onChange(findByTimeEnd)}
         />
 
       </div>

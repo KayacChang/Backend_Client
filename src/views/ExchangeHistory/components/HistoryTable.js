@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
@@ -63,13 +62,13 @@ function HistoryHead() {
   );
 }
 
-function HistoryBody({ data, rows, page }) {
-  const from = page * rows;
-  const to = from + rows;
+function HistoryBody({ data }) {
+
+  if (!data) return null;
 
   return (
     <TableBody>
-      {data.slice(from, to).map((record) => (
+      {data.map((record) => (
         <TableRow hover key={record.uid}>
 
           <TableCell>{record.uid}</TableCell>
@@ -94,21 +93,14 @@ function HistoryBody({ data, rows, page }) {
   );
 }
 
-export const HistoryTable = props => {
-  const { data, count } = props;
+export function HistoryTable(props) {
+  const {
+    data, count,
+    page, onChangePage,
+    rowsPerPage, onChangeRowsPerPage
+  } = props;
 
   const classes = useStyles();
-
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(0);
-
-  function onChangePage(event, page) {
-    setPage(page);
-  }
-
-  function onChangeRowsPerPage(event) {
-    setRowsPerPage(event.target.value);
-  }
 
   return (
     <Card className={classes.root}>
@@ -118,7 +110,7 @@ export const HistoryTable = props => {
           <div className={classes.inner}>
             <Table>
               <HistoryHead className={classes.center}/>
-              <HistoryBody data={data} rows={rowsPerPage} page={page}/>
+              <HistoryBody data={data}/>
             </Table>
           </div>
         </PerfectScrollbar>
@@ -137,9 +129,5 @@ export const HistoryTable = props => {
       </CardActions>
     </Card>
   );
-};
+}
 
-HistoryTable.propTypes = {
-  className: PropTypes.string,
-  data: PropTypes.array.isRequired
-};

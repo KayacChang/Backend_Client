@@ -103,7 +103,7 @@ export function GameHistory(props) {
     const noMoreData = data.length === count;
     const lessThenHalfPage = displayData.length / 2 > page;
 
-    if (isEmpty(filter) || fetching || noMoreData || lessThenHalfPage) return;
+    if (!isEmpty(filter) || fetching || noMoreData || lessThenHalfPage) return;
 
     fetchNext();
   }
