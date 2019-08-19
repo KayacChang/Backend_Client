@@ -10,7 +10,7 @@ const MEDIA_TYPE = {
 const UTF8 = 'charset=utf-8';
 
 const config = {
-  baseURL: 'http://localhost:8080/',
+  baseURL: process.env.CMS_SERVER_URL,
   headers: {
     'Content-Type': MEDIA_TYPE.JSON + '; ' + UTF8
   }
