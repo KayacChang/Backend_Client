@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import { splitEvery } from 'ramda';
+import { isEmpty, splitEvery } from 'ramda';
 
 import { HistoryTable } from './components';
 import { Toolbar } from './components/Toolbar';
@@ -49,6 +49,7 @@ async function fetchCount(product) {
 
 export function GameHistory(props) {
   const classes = useStyles();
+
   const { product } = props.match.params;
 
   const [data, setData] = useState([]);
@@ -61,11 +62,13 @@ export function GameHistory(props) {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [fetching, setFetching] = useState(undefined);
+  const [filter, setFilter] = useState({});
 
-  useEffect(() => {
-    (async () => {
+  const [fetching, setFetching] = useState(false);
 
+  async function fetchNewHistory(params = {}) {
+
+    if (isEmpty(params)) {
       const [history, count] =
         await Promise.all([
           fetchHistory(product),
@@ -74,40 +77,50 @@ export function GameHistory(props) {
 
       setCount(count);
 
-      setData(history);
-    })();
-  }, [product]);
+      return history;
+    }
+
+    return fetchHistory(product, params);
+  }
 
   useEffect(() => {
+    fetchNewHistory()
+      .then((history) => setData(history));
 
+  }, []);
+
+  useEffect(() => {
     const displayData = splitEvery(rowsPerPage, data);
 
     setDisplayData(displayData);
 
   }, [data, rowsPerPage]);
 
-  async function onChangePage(event, page) {
+
+  function onChangePage(event, page) {
     if (displayData.length > page) setPage(page);
 
-    const from = data.length;
-    const limit = 10 * rowsPerPage;
+    const noMoreData = data.length === count;
+    const lessThenHalfPage = displayData.length / 2 > page;
 
-    const dontFetch =
-      data.length === count ||
-      page * rowsPerPage < data.length / 2 ||
-      fetching === from;
+    if (isEmpty(filter) || fetching || noMoreData || lessThenHalfPage) return;
 
-    if (dontFetch) return;
+    fetchNext();
+  }
 
-    setFetching(from);
+  async function fetchNext() {
+    const params = {
+      from: data.length,
+      limit: 10 * rowsPerPage
+    };
 
-    const newData = await fetchHistory(product, { from, limit });
+    setFetching(true);
 
-    setFetching(undefined);
+    const history = await fetchNewHistory(params);
 
-    if (!newData) return;
+    setData([...data, ...history]);
 
-    setData([...data, ...newData]);
+    setFetching(false);
   }
 
   function onChangeRowsPerPage(event) {
@@ -118,10 +131,18 @@ export function GameHistory(props) {
   return (
     <div className={classes.root}>
       <Toolbar
-        data={data} setData={setData}
+        data={data}
+        setData={setData}
+
         page={page}
-        onChangePage={onChangePage}
-        fetchHistory={(params) => fetchHistory(product, params)}
+        setPage={setPage}
+
+        filter={filter}
+        setFilter={setFilter}
+
+        setCount={setCount}
+
+        fetchHistory={fetchNewHistory}
       />
 
       <div className={classes.content}>
