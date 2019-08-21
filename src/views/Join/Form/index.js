@@ -49,10 +49,10 @@ const FormStyle = makeStyles(theme => ({
 
 export function Form(props) {
   const { history } = props;
-  
+
   const classes = FormStyle();
 
-  const [userName, setUserName] = useState(undefined);
+  const [name, setUserName] = useState(undefined);
   const [email, setEmail] = useState(undefined);
   const [password, setPassword] = useState(undefined);
   const [policy, setPolicy] = useState(false);
@@ -61,7 +61,7 @@ export function Form(props) {
     event.preventDefault();
 
     try {
-      const { status } = await post('users/register', { userName, email, password });
+      const { status } = await post('users/register', { name, email, password });
 
       if (status !== 201) throw new Error(`Register Failed...`);
 
@@ -94,7 +94,7 @@ export function Form(props) {
 
         <Policy setValue={setPolicy}/>
 
-        <Submit enable={userName && email && password && policy}/>
+        <Submit enable={name && email && password && policy}/>
 
       </form>
     </FormContainer>
