@@ -10,20 +10,22 @@ const MEDIA_TYPE = {
 const UTF8 = 'charset=utf-8';
 
 const config = {
-  baseURL: process.env.CMS_SERVER_URL,
+  baseURL: process.env.REACT_APP_CMS_URL,
   headers: {
     'Content-Type': MEDIA_TYPE.JSON + '; ' + UTF8
   }
 };
 
-export async function get(url, options = {}) {
+export async function get(uri, options = {}) {
+
   return axios
     .create(mergeDeepRight(config, options))
-    .get(url);
+    .get(uri);
 }
 
-export async function post(url, payload, options = {}) {
+export async function post(uri, payload, options = {}) {
+
   return axios
     .create(mergeDeepRight(config, options))
-    .post(url, payload);
+    .post(uri, payload);
 }
